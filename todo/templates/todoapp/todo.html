@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- Coding by CodingLab | www.codinglabweb.com-->
+<html lang="en" >
+
+<head>
+  <title>Todo</title>
+  <script src="//d.bablic.com/snippet/6288d4c3c4c5800001a91242.js?version=3.9"></script>
+</head>
+
+<body>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+    crossorigin="anonymous"></script>
+
+  <section class="vh-100" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-9 col-xl-7">
+          <div class="card rounded-3">
+            <div class="card-body p-4">
+
+              <h4 class="text-center my-3 pb-3">To Do App</h4>
+
+              <form method="POST" class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
+                {% csrf_token %}
+                <div class="col-12">
+                  <div class="form-outline">
+                    <input type="text" id="form1" class="form-control" name="task" placeholder="Ingresa la tarea..." />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+              </form>
+              <a href="{% url 'logout' %}"><button type="submit" class="btn btn-danger">Salir</button></a>
+              <table class="table mb-4">
+                <thead>
+                  <tr>
+                    <th scope="col">Todo Item</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in todos %}
+                  <tr>
+
+                    {% if i.estado == True %}
+                    <td><Strike>{{i.todo_nombre}}</Strike></td>
+                    <td>Completo</td>
+
+                    {% else %}
+                    <td>{{i.todo_nombre}}</td>
+                    <td>En proceso</td>
+                    {% endif %}
+
+                    <td>
+                      <a href="{% url 'eliminar_todo' i.id %}"><button type="submit"
+                          class="btn btn-danger btn-sm">Eliminar</button></a>
+                      <a href="{% url 'editar_todo' i.id %}"><button type="submit"
+                          class="btn btn-success btn-sm ms-1">Completado</button></a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+
+              <!-- Para la navegacion de la pagina -->
+              <nav aria-label="...">
+                <ul class="pagination">
+
+                  {% if todos.has_previous %}
+                  <li class="page-item ">
+                    <a class="page-link" href="?page={{todos.previous_page_number }}" tabindex="-1">&laquo;</a>
+                  </li>
+                  {% endif %}
+
+
+                  {% for i in todos.paginator.page_range %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{i}}">{{i}}</a>
+                  </li>
+                  {% endfor %}
+
+                  {% if todos.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{todos.next_page_number }}">&raquo;</a>
+                  </li>
+                  {% endif %}
+
+
+                </ul>
+              </nav>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>
